@@ -94,36 +94,69 @@ function cleanCart() {
     /*cartList=[];
     console.log(cartList);*/
     cart=[];
+    total=0;
+    subtotal = {
+        grocery: {
+            value: 0, 
+            discount: 0
+        },
+        beauty: {
+            value: 0, 
+            discount: 0
+        },
+        clothes: {
+            value: 0, 
+            discount: 0
+        },
+    };
     console.log(cart);
 }
 
 // Exercise 3
 function calculateSubtotals() {
     // 1. Create a for loop on the "cartList" array
-   
+    subtotal = {
+        grocery: {
+            value: 0, 
+            discount: 0
+        },
+        beauty: {
+            value: 0, 
+            discount: 0
+        },
+        clothes: {
+            value: 0, 
+            discount: 0
+        },
+    };
     for(let i=0;i<cart.length;i++) { 
 
         // 2. Implement inside the loop an if...else or switch...case to add the quantities of each type of product, obtaining the subtotals: subtotalGrocery, subtotalBeauty and subtotalClothes
         if(cart[i].type=="grocery"){
-            subtotal.grocery.value+=cart[i].price;
+            subtotal.grocery.value+=cart[i].price*cart[i].quantity;
         }else if(cart[i].type=="beauty"){
-            subtotal.beauty.value+=cart[i].price;
+            subtotal.beauty.value+=cart[i].price*cart[i].quantity;
         }else{
-            subtotal.clothes.value+=cart[i].price;
+            subtotal.clothes.value+=cart[i].price*cart[i].quantity;
         }
     }
-    //console.log(subtotal);
+
+    var subtotalGrocery=subtotal.grocery.value-subtotal.grocery.discount;
+    var subtotalBeauty=subtotal.beauty.value-subtotal.beauty.discount;
+    var subtotalClothes=subtotal.clothes.value-subtotal.clothes.discount;
+
+    console.log(subtotalGrocery,subtotalBeauty,subtotalClothes);
 
  }
 
 // Exercise 4
-function calculateTotal() {
+/*function calculateTotal() {
     // Calculate total price of the cart either using the "cartList" array
     //console.log(subtotal);
     for (let x in subtotal)
     total+=subtotal[x].value;
     //console.log(total);
-}
+}*/
 
 // Exercise 5
 /*function generateCart(cartList) {
@@ -133,7 +166,7 @@ function calculateTotal() {
         if(cart!=''){
             for(let y in cart){
                  if (cart[y].id!=cartList[x].id){
-                    cart.push({id:cartList[x].id,name:cartList[x].name,price:cartList[x].price,type:cartList[x].type,quantity:1,subtotal:cartList[x].price,subtotalWithDiscount:cartList[x].subtotalWithDiscount});
+                    cart.push({id:cartList[x].id,name:cartList[x].name,price:cartList[x].price,type:cartList[x].type,quantity:1,subtotal:cartList[x].price});
                    break;
                 }else{                 
                     cart[y].quantity+=1;
@@ -141,7 +174,7 @@ function calculateTotal() {
                 }
             }   
         }else{
-            cart.push({id:cartList[x].id,name:cartList[x].name,price:cartList[x].price,type:cartList[x].type,quantity:1,subtotal:cartList[x].price,subtotalWithDiscount:cartList[x].subtotalWithDiscount});
+            cart.push({id:cartList[x].id,name:cartList[x].name,price:cartList[x].price,type:cartList[x].type,quantity:1,subtotal:cartList[x].price});
         } 
     }
     console.log(cart);
@@ -149,17 +182,23 @@ function calculateTotal() {
 
 // Exercise 6
 function applyPromotionsCart(cart) {
+   
     // Apply promotions to each item in the array "cart"
     for(let x in cart){
-        if (cart[x].id==1 && cart[x].quantity>=3){
-            cart[x].subtotalWithDiscount=cart[x].quantity*10;
-        }
 
         if(cart[x].id==3 && cart[x].quantity>=10){
-            cart[x].subtotalWithDiscount=cart[x].subtotal-(cart[x].subtotal*2/3);
+            cart[x].subtotalWithDiscount=cart[x].subtotal-(cart[x].subtotal*(2/3));
+        }else if (cart[x].id==3 && cart[x].quantity<10){
+            cart[x].subtotalWithDiscount=0;
+        }
+
+        if(cart[x].id==1 && cart[x].quantity>=3){
+            cart[x].subtotalWithDiscount=cart[x].quantity*10;
+        }else if(cart[x].id==1 && cart[x].quantity<3) {
+            cart[x].subtotalWithDiscount=0;
         }
     }
-    console.log(cart);
+    //console.log(cart);
 }
 
 // Exercise 7
@@ -169,27 +208,38 @@ function addToCart(id) {
     for(let i=0;i<products.length;i++){
         if(products[i].id==id){
              // 2. Add found product to the cart array or update its quantity in case it has been added previously.
-            if(cart!=''){
-                  var exists= cart.findIndex(el => el.id==id); 
+           
+            var exists= cart.findIndex(el => el.id==id); 
 
-                     if(exists === -1){
-                         cart.push({id:products[i].id,name:products[i].name,price:products[i].price,type:products[i].type,quantity:1,subtotal:products[i].price,subtotalWithDiscount:0});
-                  
-                    }else if(exists >-1){
-                        cart[exists].quantity+=1;
-                        cart[exists].subtotal+=cart[exists].price;
-                    }
-                   
-            }else{
+            if(exists === -1){
                 cart.push({id:products[i].id,name:products[i].name,price:products[i].price,type:products[i].type,quantity:1,subtotal:products[i].price,subtotalWithDiscount:0});
-            }                         
+            
+            }else if(exists >-1){
+                cart[exists].quantity+=1;
+                cart[exists].subtotal+=cart[exists].price;
+            }
+                                    
         }         
-    }   
+    }  
+    applyPromotionsCart(cart);
+   
+    total=0;
+    for(let i=0;i<cart.length;i++){
+        if(cart[i].subtotalWithDiscount>0){
+        console.log('hola');
+            total += cart[i].subtotalWithDiscount;
+        }else{
+            total += cart[i].subtotal;  
+        }  
+    }
+
     console.log(cart);
 }
 
 // Exercise 9
 function removeFromCart(id) {
+
+    
     // 1. Loop for to the array products to get the item to remove to cart
      if(cart!=''){
         var exists= cart.findIndex(el => el.id==id); 
@@ -200,6 +250,10 @@ function removeFromCart(id) {
 
                   if(cart[index].quantity>1){
                         cart[index].quantity-=1;
+                        cart[index].subtotal=cart[index].price*cart[index].quantity;
+                       
+                        applyPromotionsCart(cart);
+                        
                   }else{
                        cart.splice(index, 1);
                   }
@@ -211,17 +265,29 @@ function removeFromCart(id) {
     }else{
         alert('El carrito está vacío.');
     }   
+    //calculateTotal();
+    total=0;
+    for(let i=0;i<cart.length;i++){
+        if(cart[i].subtotalWithDiscount>0){
+        console.log('hola');
+            total += cart[i].subtotalWithDiscount;
+        }else{
+            total += cart[i].subtotal;  
+        }  
+    }
+
     console.log(cart);
     // 2. remove found product to the cartList array
 }
 
 // Exercise 10
 function printCart() {
+    $('#table').remove();
     // Fill the shopping cart modal manipulating the shopping cart dom
-    $('.list').append('<body>');
+    $('.list').append('<table id="table"><thead><tr><td>Nombre</td><td>Cantidad</td><td>Precio</td><td>Subtotal</td><td>Subtotal con descuento</td></tr></thead><tbody>');
     for(let i=0;i<cart.length;i++){
-        $('.list').append('<tr><td>'+cart[i].name+'</td><td>'+cart[i].quantity+'</td><td>'+cart[i].subtotal)+'</td></tr>';
+        $('#table').append('<tr><td>'+cart[i].name+'</td><td>'+cart[i].quantity+'</td><td>'+cart[i].price+'</td><td>'+cart[i].subtotal+'</td><td>'+(cart[i].subtotalWithDiscount).toFixed(2)+'</td></tr>');
        
     }
-    $('.list').append('</body></table>');
+    $('#table').append('</tbody><tfoot><tr><td>Total:'+total.toFixed(2)+'</td><td></tfoot></table>');
 }

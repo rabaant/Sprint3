@@ -14,6 +14,18 @@
   <link rel="stylesheet" href="css/shop.css">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>ShopNow</title>
+  <style>
+     #table{
+      overflow-x:scroll;
+      min-width: 500px;
+     }
+    #table tr td{
+      border:0.5px solid gray;
+      max-width: 50px;
+      overflow: hidden;
+      
+    }
+  </style>
 </head>
 
 <body>
@@ -146,9 +158,9 @@
   <!-- modal -->
   <aside>
     <div class="modal fade" id="cartModal" tabindex="-1" role="dialog"
-      aria-labelledby="cartModalTitle" aria-hidden="true">
+      aria-labelledby="cartModalTitle" aria-hidden="true" >
       <div class="modal-dialog modal-dialog-scrollable" role="document">
-        <div class="modal-content">
+        <div class="modal-content" >
           <div class="modal-header">
             <h5 class="modal-title" id="cartModalScrollableTitle"><i class="fas fa-cart-arrow-down"></i>My Cart</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -158,9 +170,9 @@
           <div class="modal-body">
             <!-- listing items starts -->
             
-            <div>
-              <table class="list">
-                <thead><tr><td>Nombre</td><td>Cantidad</td><td>Precio</td></tr></thead>
+            <div class="list">
+              
+                
               
               <div>
                 <h3 class="text-center bill px-5">Select Something</h3>
